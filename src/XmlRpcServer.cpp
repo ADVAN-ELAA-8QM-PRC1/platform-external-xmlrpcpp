@@ -132,7 +132,7 @@ XmlRpcServer::work(double msTime)
 // Handle input on the server socket by accepting the connection
 // and reading the rpc request.
 unsigned
-XmlRpcServer::handleEvent(unsigned mask)
+XmlRpcServer::handleEvent(unsigned /* mask */)
 {
   acceptConnection();
   return XmlRpcDispatch::ReadableEvent;		// Continue to monitor this fd
@@ -209,7 +209,7 @@ class ListMethods : public XmlRpcServerMethod
 public:
   ListMethods(XmlRpcServer* s) : XmlRpcServerMethod(LIST_METHODS, s) {}
 
-  void execute(XmlRpcValue& params, XmlRpcValue& result)
+  void execute(XmlRpcValue& /* params */, XmlRpcValue& result)
   {
     _server->listMethods(result);
   }
