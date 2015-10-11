@@ -29,6 +29,7 @@ namespace XmlRpc {
   static const char DATETIME_ETAG[] = "</dateTime.iso8601>";
   static const char BASE64_TAG[]    = "<base64>";
   static const char BASE64_ETAG[]   = "</base64>";
+  static const char NIL_TAG[]        = "<nil/>";
 
   static const char ARRAY_TAG[]     = "<array>";
   static const char DATA_TAG[]      = "<data>";
@@ -222,7 +223,9 @@ namespace XmlRpc {
 	int afterValueOffset = *offset;
     std::string typeTag = XmlRpcUtil::getNextTag(valueXml, offset);
     bool result = false;
-    if (typeTag == BOOLEAN_TAG)
+    if (typeTag == NIL_TAG)
+      result = nilFromXml(valueXml, offset);
+    else if (typeTag == BOOLEAN_TAG)
       result = boolFromXml(valueXml, offset);
     else if (typeTag == I4_TAG || typeTag == INT_TAG)
       result = intFromXml(valueXml, offset);
@@ -257,6 +260,7 @@ namespace XmlRpc {
   std::string XmlRpcValue::toXml() const
   {
     switch (_type) {
+      case TypeNil:      return nilToXml();
       case TypeBoolean:  return boolToXml();
       case TypeInt:      return intToXml();
       case TypeDouble:   return doubleToXml();
@@ -270,6 +274,21 @@ namespace XmlRpc {
     return std::string();   // Invalid value
   }
 
+  // Nil
+  bool XmlRpcValue::nilFromXml(std::string const& /* valueXml */, int* /* offset */)
+  {
+    _type = TypeNil;
+    _value.asBinary = 0;
+    return true;
+  }
+
+  std::string XmlRpcValue::nilToXml() const
+  {
+    std::string xml = VALUE_TAG;
+    xml += NIL_TAG;
+    xml += VALUE_ETAG;
+    return xml;
+  }
 
   // Boolean
   bool XmlRpcValue::boolFromXml(std::string const& valueXml, int* offset)

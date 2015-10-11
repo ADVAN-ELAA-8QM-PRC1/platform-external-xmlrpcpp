@@ -32,7 +32,8 @@ namespace XmlRpc {
       TypeDateTime,
       TypeBase64,
       TypeArray,
-      TypeStruct
+      TypeStruct,
+      TypeNil
     };
 
     // Non-primitive types
@@ -129,6 +130,8 @@ namespace XmlRpc {
     //! Specify the format used to write double values.
     static void setDoubleFormat(const char* f) { _doubleFormat = f; }
 
+    //! Set the value type to Nil. This value will be encoded as <nil/> xml tag.
+    void setToNil() { assertTypeOrInvalid(TypeNil); }
 
   protected:
     // Clean up
@@ -141,6 +144,7 @@ namespace XmlRpc {
     void assertStruct();
 
     // XML decoding
+    bool nilFromXml(std::string const& valueXml, int* offset);
     bool boolFromXml(std::string const& valueXml, int* offset);
     bool intFromXml(std::string const& valueXml, int* offset);
     bool doubleFromXml(std::string const& valueXml, int* offset);
@@ -151,6 +155,7 @@ namespace XmlRpc {
     bool structFromXml(std::string const& valueXml, int* offset);
 
     // XML encoding
+    std::string nilToXml() const;
     std::string boolToXml() const;
     std::string intToXml() const;
     std::string doubleToXml() const;
