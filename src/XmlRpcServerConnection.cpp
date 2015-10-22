@@ -232,6 +232,8 @@ XmlRpcServerConnection::parseRequest(XmlRpcValue& params)
 {
   int offset = 0;   // Number of chars parsed from the request
 
+  XmlRpcUtil::log(5, "XmlRpcServerConnection::parseRequest:\n%s\n", _request.c_str());
+
   std::string methodName = XmlRpcUtil::parseTag(METHODNAME_TAG, _request, &offset);
 
   if (methodName.size() > 0 && XmlRpcUtil::findTag(PARAMS_TAG, _request, &offset))
